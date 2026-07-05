@@ -5,8 +5,8 @@ import { createRoomSchema } from '../validators/room.validator.js';
 
 const router = express.Router();
 
-router.post('/', validate(createRoomSchema), roomController.createRoom);
-router.get('/', roomController.listPublicRooms);
-router.get('/:roomId', roomController.getRoomInfo);
+router.post('/', validate(createRoomSchema), createRoom);
+router.get('/', listPublicRooms);
+router.get('/:roomId', getRoomInfo);
 
 export default router;
