@@ -1,11 +1,4 @@
 @import "tailwindcss";
-
-/* ============================================================
-   DOODLE DOWN — Design Tokens (Tailwind v4 @theme)
-   Matches the real skribbl.io feel: a bright, white/paper-toned
-   UI with card-based panels, soft shadows, and playful marker-
-   bright accent colors — not a dark theme.
-   ============================================================ */
 @theme {
   --color-app-bg: #eef1f8;
   --color-surface: #ffffff;
