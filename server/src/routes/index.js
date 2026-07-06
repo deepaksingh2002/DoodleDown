@@ -1,16 +1,21 @@
 import express from 'express';
-import roomRoutes from './room.routes.js';
-import healthRoutes from './health.routes.js';
-import wordsRoutes from './words.routes.js';
-import historyRoutes from './history.routes.js';
-import leaderboardRoutes from './leaderboard.routes.js';
+import { createRoom, getRoomInfo, listPublicRooms, getHealth, getRecentGames, getGameByRoomId, getLeaderboard, getCategories } from '../controllers/index.js';
+import validate from '../middlewares/validate.middleware.js';
+import { createRoomSchema } from '../validators/room.validator.js';
 
 const router = express.Router();
 
-router.use('/health', healthRoutes);
-router.use('/rooms', roomRoutes);
-router.use('/words', wordsRoutes);
-router.use('/history', historyRoutes);
-router.use('/leaderboard', leaderboardRoutes);
+router.get('/health', getHealth);
+
+router.post('/rooms', validate(createRoomSchema), createRoom);
+router.get('/rooms', listPublicRooms);
+router.get('/rooms/:roomId', getRoomInfo);
+
+router.get('/words/categories', getCategories);
+
+router.get('/history', getRecentGames);
+router.get('/history/:roomId', getGameByRoomId);
+
+router.get('/leaderboard', getLeaderboard);
 
 export default router;

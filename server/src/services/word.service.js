@@ -1,13 +1,11 @@
 import Word from '../models/Word.model.js';
 import WordBank from '../utils/wordBank.js';
-import localWords from '../data/words.json' assert { type: 'json' };
+import words from '../data/words.js';
 import { isDBConnected } from '../config/db.js';
 import logger from '../utils/logger.js';
 
-// Kept as an in-process fallback so the game NEVER stalls waiting on a word,
-// even if MongoDB is unreachable mid-game.
-const localBank = new WordBank(localWords);
 
+const localBank = new WordBank(words);
 
 class WordService {
  
@@ -66,38 +64,38 @@ class WordService {
   async getCategories() {
     if (isDBConnected()) {
       try {
-
         const categories = await Word.aggregate([
-          { $match: { 
-              isCustom: { $ne: true } 
-            } 
+          {
+            $match: {
+              isCustom: { $ne: true },
+            },
           },
           {
-            $group: { 
-              _id: '$category', 
-              wordCount: { $sum: 1 } 
-            } 
+            $group: {
+              _id: '$category',
+              wordCount: { $sum: 1 },
+            },
           },
-          { $project: { 
-              _id: 0, 
-              name: '$_id', 
-              wordCount: 1 
-            } 
+          {
+            $project: {
+              _id: 0,
+              name: '$_id',
+              wordCount: 1,
+            },
           },
-          { 
+          {
             $sort: {
-              name: 1 
-            } 
+              name: 1,
+            },
           },
         ]);
 
         if (categories.length) return categories;
-        
       } catch (err) {
         logger.error(`Failed to fetch categories from DB: ${err.message}`);
       }
     }
-    return Object.keys(localWords).map((key) => ({ name: key, wordCount: localWords[key].length }));
+    return Object.keys(words).map((key) => ({ name: key, wordCount: words[key].length }));
   }
 }
 

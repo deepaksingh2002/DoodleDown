@@ -1,19 +1,10 @@
-import words from '../data/words.json' assert { type: 'json' };
-
-/**
- * WordBank centralizes all word-selection and word-matching logic.
- * Keeping matching logic here (not scattered in socket handlers) makes it
- * easy to explain/test: "how does word-matching work?" -> this file.
- */
+import words from '../data/words.js';
 class WordBank {
   constructor(wordMap = words) {
     this.wordMap = wordMap;
     this.allWords = Object.values(wordMap).flat();
   }
 
-  /**
-   * Returns `count` unique random words, optionally scoped to given categories.
-   */
   getRandomWords(count = 3, categories = null) {
     const pool =
       categories && categories.length > 0
@@ -25,12 +16,6 @@ class WordBank {
     return shuffled.slice(0, count);
   }
 
-  /**
-   * Normalizes a guess/word for comparison:
-   * - trims whitespace
-   * - lowercases
-   * - collapses internal multiple spaces
-   */
   static normalize(text) {
     return String(text || '')
       .trim()
@@ -38,12 +23,6 @@ class WordBank {
       .replace(/\s+/g, ' ');
   }
 
-  /**
-   * Compares a guess against the target word.
-   * Returns { exact: boolean, close: boolean }
-   * "close" = small edit distance (1-2 chars off) - used to nudge the guesser
-   * without revealing the word, mirroring skribbl.io's "close guess" chat hint.
-   */
   static compareGuess(guess, targetWord) {
     const a = WordBank.normalize(guess);
     const b = WordBank.normalize(targetWord);
@@ -74,10 +53,6 @@ class WordBank {
     return dp[a.length][b.length];
   }
 
-  /**
-   * Builds a masked "hint" version of the word, e.g. "_ _ a _ _" for "apple"
-   * with index 2 revealed. Spaces in multi-word answers are preserved as spaces.
-   */
   static buildHintMask(word, revealedIndices = new Set()) {
     return word
       .split('')

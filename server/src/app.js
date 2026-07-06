@@ -11,42 +11,50 @@ import routes from './routes/index.js';
 import notFoundMiddleware from './middlewares/notFound.middleware.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 
-const app = express();
+function createMorganStream() {
+  return {
+    write(message) {
+      const trimmedMessage = message.trim();
+      logger.http?.(trimmedMessage) || logger.info(trimmedMessage);
+    },
+  };
+}
 
-// --- Security & parsing middleware ---
-app.use(helmet());
-app.use(
-  cors({
-    origin: env.CORS_ORIGIN,
-    credentials: true,
-  })
-);
-app.use(compression());
-app.use(express.json({ limit: '16kb' }));
-app.use(express.urlencoded({ extended: true, limit: '16kb' }));
+function createApp() {
+  const app = express();
 
-// --- Request logging ---
-const morganStream = { write: (message) => logger.http?.(message.trim()) || logger.info(message.trim()) };
-app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev', { stream: morganStream }));
+  app.use(helmet());
+  app.use(
+    cors({
+      origin: env.CORS_ORIGIN,
+      credentials: true,
+    })
+  );
+  app.use(compression());
+  app.use(express.json({ limit: '16kb' }));
+  app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 
-// --- Rate limiting (protects REST endpoints; sockets are naturally throttled by game logic) ---
-const limiter = rateLimit({
-  windowMs: env.RATE_LIMIT_WINDOW_MS,
-  max: env.RATE_LIMIT_MAX,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, statusCode: 429, message: 'Too many requests, please try again later' },
-});
-app.use('/api', limiter);
+  app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev', { stream: createMorganStream() }));
 
-// --- Routes ---
-app.get('/', (req, res) => {
-  res.json({ success: true, message: 'skribbl-clone backend is running', docs: '/api/v1/health' });
-});
-app.use('/api/v1', routes);
+  const limiter = rateLimit({
+    windowMs: env.RATE_LIMIT_WINDOW_MS,
+    max: env.RATE_LIMIT_MAX,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, statusCode: 429, message: 'Too many requests, please try again later' },
+  });
+  app.use('/api', limiter);
 
-// --- 404 + centralized error handling (must be registered LAST) ---
-app.use(notFoundMiddleware);
-app.use(errorMiddleware);
+  app.get('/', (req, res) => {
+    res.json({ success: true, message: 'skribbl-clone backend is running', docs: '/api/v1/health' });
+  });
+  app.use('/api/v1', routes);
 
-export default app;
+  app.use(notFoundMiddleware);
+  app.use(errorMiddleware);
+
+  return app;
+}
+
+export default createApp();
+export { createApp };

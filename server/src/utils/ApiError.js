@@ -1,15 +1,5 @@
-/**
- * Standardized application error class.
- * Every intentional error thrown in controllers/services should be an ApiError
- * so the global error middleware can format a consistent response.
- */
 class ApiError extends Error {
-  /**
-   * @param {number} statusCode - HTTP status code
-   * @param {string} message - Human readable error message
-   * @param {Array}  errors - Optional array of granular error details (e.g. validation issues)
-   * @param {string} stack - Optional stack trace override
-   */
+ 
   constructor(statusCode, message = 'Something went wrong', errors = [], stack = '') {
     super(message);
     this.statusCode = statusCode;

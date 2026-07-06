@@ -1,7 +1,3 @@
-/**
- * Standardized success response wrapper so every REST endpoint returns
- * the same shape: { statusCode, data, message, success }
- */
 class ApiResponse {
   constructor(statusCode, data = null, message = 'Success') {
     this.statusCode = statusCode;

@@ -1,10 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-/**
- * Centralized environment configuration.
- * Never read process.env directly anywhere else in the app - import this instead.
- */
 const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: parseInt(process.env.PORT, 10) || 5000,
