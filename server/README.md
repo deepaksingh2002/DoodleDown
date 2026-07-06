@@ -95,7 +95,7 @@ src/
 
 ```bash
 git clone https://github.com/deepaksingh2002/DoodleDown
-cd skribbl-backend
+cd DoodleDown
 npm install
 cp .env.example .env       # adjust CORS_ORIGIN to match your frontend's URL
 npm run dev                 # nodemon, auto-restarts on file changes
