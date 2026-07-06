@@ -94,7 +94,7 @@ src/
 ## 3. Setup & Run Locally
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/deepaksingh2002/DoodleDown
 cd skribbl-backend
 npm install
 cp .env.example .env       # adjust CORS_ORIGIN to match your frontend's URL
