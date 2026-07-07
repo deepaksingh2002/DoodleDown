@@ -2,8 +2,7 @@
 
 Real-time multiplayer drawing & guessing game backend, built with **Node.js**, **Express**, and **Socket.IO**.
 
-> Live URL: _add your deployed URL here after deploying, e.g. `https://your-skribbl-clone.onrender.com`_
-
+> Live URL:https://doodledown.onrender.com
 ---
 
 ## 1. Tech Stack
@@ -95,8 +94,8 @@ src/
 ## 3. Setup & Run Locally
 
 ```bash
-git clone <your-repo-url>
-cd skribbl-backend
+git clone https://github.com/deepaksingh2002/DoodleDown
+cd DoodleDown
 npm install
 cp .env.example .env       # adjust CORS_ORIGIN to match your frontend's URL
 npm run dev                 # nodemon, auto-restarts on file changes

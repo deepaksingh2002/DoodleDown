@@ -1,4 +1,4 @@
-# Doodle Down — a skribbl.io-style frontend clone
+# Doodle Down – a skribbl.io-style frontend clone
 
 A fully playable **frontend** for a real-time drawing & guessing game, built to match the
 assignment spec (rooms, lobby, turn-based drawing, canvas sync, word system, hints,
