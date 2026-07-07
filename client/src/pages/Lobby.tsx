@@ -8,7 +8,7 @@ import PlayerMenu from "../components/PlayerMenu";
 import InviteModal from "../components/InviteModal";
 
 export default function Lobby() {
-  const { state, engine } = useGame();
+  const { state, engine, leaveRoom } = useGame();
   const navigate = useNavigate();
   const [showInvite, setShowInvite] = useState(false);
   if (!state || !engine) return null;
@@ -19,7 +19,7 @@ export default function Lobby() {
 
   return (
     <div className="min-h-screen flex justify-center px-5 py-8">
-      <div className="w-full max-w-[1100px] flex flex-col gap-5">
+      <div className="w-full max-w-275 flex flex-col gap-5">
         <header className="flex items-start justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-[30px] text-ink tracking-wide">Room {state.roomId}</h1>
@@ -29,7 +29,13 @@ export default function Lobby() {
             <button className="btn btn-secondary" onClick={() => setShowInvite(true)}>
               <FaUserFriends /> Invite friends
             </button>
-            <button className="btn btn-ghost" onClick={() => navigate("/")}>
+            <button
+              className="btn btn-ghost"
+              onClick={() => {
+                leaveRoom();
+                navigate("/");
+              }}
+            >
               <FaSignOutAlt /> Leave
             </button>
           </div>
@@ -38,7 +44,7 @@ export default function Lobby() {
         <div className="grid grid-cols-1 md:grid-cols-[220px_1fr_260px] gap-4.5 items-start">
           <section className="bg-surface rounded-2xl p-4.5 border border-border shadow-sm">
             <h3 className="text-base mb-3 text-ink">Players ({state.players.length}/{state.settings.maxPlayers})</h3>
-            <ul className="list-none p-0 m-0 flex flex-col gap-2 max-h-[420px] overflow-y-auto">
+            <ul className="list-none p-0 m-0 flex flex-col gap-2 max-h-105 overflow-y-auto">
               {state.players.map((p) => (
                 <li key={p.id} className="flex items-center gap-1">
                   <div className="flex-1 min-w-0"><PlayerBadge player={p} /></div>
@@ -53,8 +59,8 @@ export default function Lobby() {
             )}
           </section>
 
-          <section className="bg-surface rounded-2xl p-4.5 border border-border shadow-sm flex flex-col gap-4 items-center justify-center min-h-[380px]">
-            <div className="flex-1 w-full border-2 border-dashed border-border rounded-2xl bg-surface-alt flex flex-col items-center justify-center gap-2.5 text-ink-faint text-[13px] min-h-[260px]">
+          <section className="bg-surface rounded-2xl p-4.5 border border-border shadow-sm flex flex-col gap-4 items-center justify-center min-h-95">
+            <div className="flex-1 w-full border-2 border-dashed border-border rounded-2xl bg-surface-alt flex flex-col items-center justify-center gap-2.5 text-ink-faint text-[13px] min-h-65">
               <span className="font-mono text-3xl font-bold text-brand-blue tracking-[4px]">{state.roomId}</span>
               <p>Waiting for the host to start the game...</p>
             </div>

@@ -15,7 +15,7 @@ import GameOverModal from "../components/GameOverModal";
 import InviteModal from "../components/InviteModal";
 
 export default function Game() {
-  const { state, engine } = useGame();
+  const { state, engine, leaveRoom } = useGame();
   const navigate = useNavigate();
   const [color, setColor] = useState("#1c1c1c");
   const [size, setSize] = useState(6);
@@ -39,7 +39,13 @@ export default function Game() {
         <button className="btn btn-secondary ml-auto px-4 py-2 text-[13px]" onClick={() => setShowInvite(true)}>
           <FaUserFriends /> Invite
         </button>
-        <button className="btn btn-ghost px-4 py-2 text-[13px]" onClick={() => navigate("/")}>
+        <button
+          className="btn btn-ghost px-4 py-2 text-[13px]"
+          onClick={() => {
+            leaveRoom();
+            navigate("/");
+          }}
+        >
           <FaSignOutAlt /> Leave
         </button>
       </header>

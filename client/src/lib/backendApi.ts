@@ -31,6 +31,18 @@ function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.trim().replace(/\/+$/, "");
 }
 
+function resolveHttpBaseUrl(baseUrl: string): string {
+  const normalized = normalizeBaseUrl(baseUrl);
+
+  if (!normalized) {
+    return typeof window !== "undefined" ? window.location.origin : "";
+  }
+
+  return normalized
+    .replace(/^wss:/i, "https:")
+    .replace(/^ws:/i, "http:");
+}
+
 function toBackendSettings(settings: RoomSettings): Record<string, unknown> {
   return {
     maxPlayers: settings.maxPlayers,
@@ -85,7 +97,7 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export async function createBackendRoom(baseUrl: string, hostName: string, settings: RoomSettings, isPrivate: boolean) {
-  const url = `${normalizeBaseUrl(baseUrl)}/api/v1/rooms`;
+  const url = `${resolveHttpBaseUrl(baseUrl)}/api/v1/rooms`;
   const data = await requestJson<CreateRoomResponse>(url, {
     method: "POST",
     body: JSON.stringify({ hostName, isPrivate, settings: toBackendSettings(settings) }),
@@ -99,6 +111,6 @@ export async function createBackendRoom(baseUrl: string, hostName: string, setti
 }
 
 export async function getBackendRoomInfo(baseUrl: string, roomId: string): Promise<RoomInfoResponse> {
-  const url = `${normalizeBaseUrl(baseUrl)}/api/v1/rooms/${encodeURIComponent(roomId)}`;
+  const url = `${resolveHttpBaseUrl(baseUrl)}/api/v1/rooms/${encodeURIComponent(roomId)}`;
   return requestJson<RoomInfoResponse>(url, { method: "GET" });
 }
